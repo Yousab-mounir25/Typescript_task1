@@ -1,18 +1,36 @@
 // question 1:
 class User {
-    id;
+    _id;
+    _password;
+    _phone;
     name;
     email;
-    password;
-    phone;
     age;
     constructor(id, name, email, password, phone, age) {
-        this.id = id;
+        this._id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
-        this.phone = phone;
+        this._password = password;
+        this._phone = phone;
         this.age = age;
+    }
+    get id() {
+        return this._id;
+    }
+    set id(value) {
+        this._id = value;
+    }
+    get password() {
+        return this._password;
+    }
+    set password(value) {
+        this._password = value;
+    }
+    get phone() {
+        return this._phone;
+    }
+    set phone(value) {
+        this._phone = value;
     }
     displayInfo() {
         console.log(`the username is ${this.name} and the id ${this.id} , email ${this.email}
@@ -45,6 +63,32 @@ class Note {
     }
     preview() {
         return this.content;
+    }
+}
+//question 
+class NoteBook {
+    id;
+    title;
+    _notes; // Composition: Notebook strictly owns its _notes
+    constructor(id, title) {
+        this.id = id;
+        this.title = title;
+        this._notes = []; // Initialize empty collection
+    }
+    addNote(note) {
+        this._notes.push(note);
+        console.log(`Note "${note.title}" added to Notebook "${this.title}".`);
+    }
+    removeNote(noteId) {
+        const initialLength = this._notes.length;
+        // Filter out the note with the matching ID
+        this._notes = this._notes.filter(note => note.id !== noteId);
+        if (this._notes.length < initialLength) {
+            console.log(`Note ID ${noteId} removed from Notebook "${this.title}".`);
+        }
+        else {
+            console.log(`Note ID ${noteId} not found in Notebook.`);
+        }
     }
 }
 export {};
