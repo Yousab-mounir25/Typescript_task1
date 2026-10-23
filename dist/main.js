@@ -1,44 +1,50 @@
 // question 1:
 class User {
-    _id;
-    _password;
-    _phone;
+    id;
+    password;
+    phone;
     name;
     email;
     age;
+    //question 6
+    notebooks = [];
     constructor(id, name, email, password, phone, age) {
-        this._id = id;
+        this.id = id;
         this.name = name;
         this.email = email;
-        this._password = password;
-        this._phone = phone;
+        this.password = password;
+        this.phone = phone;
         this.age = age;
     }
-    get id() {
-        return this._id;
+    getId() {
+        return this.id;
     }
-    set id(value) {
-        this._id = value;
+    setId(value) {
+        this.id = value;
     }
-    get password() {
-        return this._password;
+    getPassword() {
+        return this.password;
     }
-    set password(value) {
-        this._password = value;
+    setPassword(value) {
+        this.password = value;
     }
-    get phone() {
-        return this._phone;
+    getPhone() {
+        return this.phone;
     }
-    set phone(value) {
-        this._phone = value;
+    setPhone(value) {
+        this.phone = value;
     }
     displayInfo() {
         console.log(`the username is ${this.name} and the id ${this.id} , email ${this.email}
             and his password ${this.password} , phone:${this.phone} and his age ${this.age}`);
     }
+    addNotebook(notebook) {
+        this.notebooks.push(notebook);
+    }
+    getNotebooks() {
+        return this.notebooks;
+    }
 }
-const user = new User(123, "yousab", "yousab.mounir@gmail.com", "122", 1222, 12);
-user.displayInfo();
 //question 2 : admin extend from user
 class Admin extends User {
     constructor(id, name, email, password, phone, age) {
@@ -51,44 +57,56 @@ class Admin extends User {
 }
 //question 3
 class Note {
-    id;
+    noteId;
     title;
     content;
     userId; // Association: Reference to the User object
-    constructor(id, title, content, userId) {
-        this.id = id;
+    constructor(noteId, title, content, usernoteId) {
+        this.noteId = noteId;
         this.title = title;
         this.content = content;
-        this.userId = userId;
+        this.userId = usernoteId;
     }
     preview() {
         return this.content;
     }
 }
-//question 
+//question 4
 class NoteBook {
     id;
     title;
-    _notes; // Composition: Notebook strictly owns its _notes
+    notes = []; // Composition: Notebook strictly owns its notes
     constructor(id, title) {
         this.id = id;
         this.title = title;
-        this._notes = []; // Initialize empty collection
+        this.notes = []; // Initialize empty collection
     }
-    addNote(note) {
-        this._notes.push(note);
-        console.log(`Note "${note.title}" added to Notebook "${this.title}".`);
+    addNote(noteId, title, content, userId) {
+        const note = new Note(noteId, title, content, userId); // NoteBook creates its own parts
+        this.notes.push(note);
+        return note;
     }
-    removeNote(noteId) {
-        const initialLength = this._notes.length;
-        // Filter out the note with the matching ID
-        this._notes = this._notes.filter(note => note.id !== noteId);
-        if (this._notes.length < initialLength) {
-            console.log(`Note ID ${noteId} removed from Notebook "${this.title}".`);
-        }
-        else {
-            console.log(`Note ID ${noteId} not found in Notebook.`);
-        }
+    removeNote(id) {
+        const before = this.notes.length;
+        this.notes = this.notes.filter((n) => n.noteId !== id);
+        return this.notes.length < before;
+    }
+}
+//question 7
+class Stroge {
+    items = [];
+    addItem(item) {
+        this.items.push(item);
+    }
+    removeItem(item) {
+        const index = this.items.indexOf(item);
+        if (index === -1)
+            return false;
+        this.items.splice(index, 1);
+        return true;
+    }
+    getAllItems() {
+        return [...this.items];
     }
 }
 export {};

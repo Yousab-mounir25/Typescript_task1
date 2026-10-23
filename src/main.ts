@@ -1,37 +1,41 @@
 // question 1:
 class User{
-    private _id: number
-    private _password: string
-    private _phone: number
+    private id: number
+    private password: string
+    private phone: string
     protected name : string
     public email:string
     public age :number
-    constructor(id:number , name:string , email:string , password:string , phone:number , age:number){
-        this._id = id
+
+    //question 6
+     protected notebooks: NoteBook[] = [];
+    constructor(id:number , name:string , email:string , password:string , phone:string , age:number){
+        this.id = id
         this.name = name
         this.email = email
-        this._password = password
-        this._phone = phone
+        this.password = password
+        this.phone = phone
         this.age = age
     }
-       public get id(): number {
-        return this._id
+       public getId(): number {
+        return this.id
     }
-    public set id(value: number) {
-        this._id = value
+    public setId(value: number) {
+        this.id = value
     }
-     public get password(): string {
-        return this._password
+     public getPassword(): string {
+        return this.password
     }
-    public set password(value: string) {
-        this._password = value
+    public setPassword(value: string) {
+        this.password = value
     }
-        public get phone(): number {
-        return this._phone
+        public getPhone(): string {
+        return this.phone
     }
-    public set phone(value: number) {
-        this._phone = value
+    public setPhone(value: string) {
+        this.phone = value
     }
+    
 
      displayInfo(){
         console.log(
@@ -40,12 +44,18 @@ class User{
         );
         
     }
+    addNotebook(notebook: NoteBook): void {
+    this.notebooks.push(notebook);
+  }
+ 
+  getNotebooks(): NoteBook[] {
+    return this.notebooks;
+  }
+    
 }
-const user = new User(123 , "yousab" , "yousab.mounir@gmail.com" , "122" , 1222 , 12)
-user.displayInfo()
 //question 2 : admin extend from user
 class Admin extends User {
-    constructor(id: number, name: string, email: string, password: string, phone: number, age: number) {
+    constructor(id: number, name: string, email: string, password: string, phone: string, age: number) {
         super(id, name, email, password, phone, age); // Call the parent (User) constructor
     }
     // Method to manage notes
@@ -56,49 +66,64 @@ class Admin extends User {
 
 //question 3
 class Note {
-    public id: number;
+    public noteId: number;
     public title: string;
     public content: string;
     public userId: User; // Association: Reference to the User object
 
-    constructor(id: number, title: string, content: string, userId: User) {
-        this.id = id;
+    constructor(noteId: number, title: string, content: string, usernoteId: User) {
+        this.noteId = noteId;
         this.title = title;
         this.content = content;
-        this.userId = userId;
+        this.userId = usernoteId;
+        
     }
     public preview():string{
         return this.content
     }
 }
 
-//question 
+//question 4
 
 class NoteBook {
     public id: number;
     public title: string;
-    private _notes: Note[]; // Composition: Notebook strictly owns its _notes
+    private notes: Note[]=[]; // Composition: Notebook strictly owns its notes
 
     constructor(id: number, title: string) {
         this.id = id;
         this.title = title;
-        this._notes = []; // Initialize empty collection
+        this.notes = []; // Initialize empty collection
     }
 
-    public addNote(note: Note): void {
-        this._notes.push(note);
-        console.log(`Note "${note.title}" added to Notebook "${this.title}".`);
-    }
+   addNote(noteId: number, title: string, content: string, userId: User): Note {
+    const note = new Note(noteId, title, content, userId); // NoteBook creates its own parts
+    this.notes.push(note);
+    return note;
+  }
 
-    public removeNote(noteId: number): void {
-        const initialLength = this._notes.length;
-        // Filter out the note with the matching ID
-        this._notes = this._notes.filter(note => note.id !== noteId);
-        
-        if (this._notes.length < initialLength) {
-            console.log(`Note ID ${noteId} removed from Notebook "${this.title}".`);
-        } else {
-            console.log(`Note ID ${noteId} not found in Notebook.`);
-        }
+  removeNote(id: number): boolean {
+    const before = this.notes.length;
+    this.notes = this.notes.filter((n) => n.noteId !== id);
+    return this.notes.length < before;
+  }
+}
+
+//question 7
+class Stroge <T>{
+    items : T[] = []
+
+    addItem(item:T){
+        this.items.push(item)
     }
+   removeItem(item: T): boolean {
+    const index = this.items.indexOf(item);
+    if (index === -1) return false;
+    this.items.splice(index, 1);
+    return true;
+  }
+ 
+  getAllItems(): T[] {
+    return [...this.items];
+  }
 }
